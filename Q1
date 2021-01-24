@@ -1,0 +1,45 @@
+/*-----------
+ * Question 1
+ ------------*/
+#include <iostream>
+#include "include/hw2q1.h"                                  // header file
+
+void codeCipher(const int, char*, int);                     // codeCipher prototype
+
+int main() {
+    char sequence[] = "The answer to Question 1 is...!";    // char array holding sentence
+    char* str = sequence;                                   // pointer to char sequence array
+    int amt = 5;                                            // amount to shift sequence characters by
+    if (amt > 26)                                           // modifies amt if greater than 26
+        while (amt > 26)                                    // runs until amt is less than 26
+            amt -= 26;                                      // decreases amt by 26
+    int n = sizeof(sequence) / sizeof(sequence[0]);         // finds size of sequence array
+    codeCipher(amt, str, n);                                // calls codeCipher function
+    return 0;
+}
+
+void codeCipher(const int amt, char* str, int n) {
+    int upCaseStart = 65;                                   // variables holding the starting and ending positions for
+    int upCaseEnd = 90;                                     // uppercase and lowercase chars in int form
+    int lowCaseStart = 97;
+    int lowCaseEnd = 122;
+    for (int i = 0; i < n; i++) {                           // cycles through sequence array using str pointer
+        int charVal = (int)*str;                            // holds integer value of char loop is on
+        int newVal = (int)*str + amt;                       // adds amt to charVal. this is the character shift
+        if (charVal >= upCaseStart && charVal <= upCaseEnd) {                           // checks if current char is uppercase
+            if (newVal >= upCaseEnd)                                                    // checks if added amt would cause the modified char to loop back to 'A'
+                std :: cout << (char)(amt - (upCaseEnd - charVal) + upCaseStart);       // prints the loop around value
+            else if (newVal < upCaseEnd)                                                // checks if added amt would not cause char to loop around
+                std :: cout << (char)(newVal);                                          // prints newVal
+        }
+        else if (charVal >= lowCaseStart && charVal <= lowCaseEnd) {                    // checks if current char is lowercase
+            if (newVal >= lowCaseEnd)                                                   // checks if added amt would case modified char to loop back to 'a'
+                std :: cout << (char)(amt - (lowCaseEnd - charVal) + lowCaseStart);     // prints the loop around value
+            else if (newVal < lowCaseEnd)                                               // checks if added amt would not cause char to loop around
+                std :: cout << (char)(newVal);                                          // prints newVal
+        }
+        else                        // the else case if char is not a letter aka number, punctuation... etc
+            std :: cout << *str;    // prints char
+    str++;                          // increases the pointer to the next element
+    }
+}
