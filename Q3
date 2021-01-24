@@ -1,0 +1,55 @@
+/*------------
+ * Question 3
+ ------------*/
+#include <iostream>
+#include <vector>
+#include "include/hw2q3.h"                                                      // header file
+
+std :: string flipEveryXthWord(std :: string [], int, int);                     // flipEveryXtWord function prototype
+
+int main() {
+    std :: string sentence[] = { "This gnirts i", "s on", "t a test !drow" };   // holds sentence pieces as string array
+    int size = sizeof(sentence) / sizeof(sentence[0]);                          // calculates size of sentence array
+    int x = 2;                                                                  // value of word count to flip
+    std :: cout << flipEveryXthWord(sentence, size, x);                         // calls flipEveryXthWord function and prints results
+    return 0;
+}
+
+std :: string flipEveryXthWord(std :: string sentence[], int size, int x) {
+    std :: string builtWord = "";                           // sentence variable to hold built word
+    std :: vector<std :: string> newSentence;               // newSentence vector holds individual words
+    for (int i = 0; i < size; i++) {                        // loop cycles through sentence array
+        /*
+         * i use a ternary operator to monitor what to append normally and what to append backwards.
+         * based on the wordCount variable, append is either set to true or false. when append is true
+         * characters are added to builtWord normally and when append is false they are appended backwards.
+         */
+        int wordCount = 0;
+        bool append = true;
+        for (int j = 0; j < sentence[i].length(); j++) {    // cycles through the string held at the array position
+            if (sentence[i].at(j) != ' ' && append)         // checks if character is not a space and if following word can be appended normally
+                builtWord += sentence[i].at(j);             // appends char's to builtWord in order of appearance
+            if (sentence[i].at(j) != ' ' && !append)        // checks if character is not a space and if following word needs to be appended backwards
+                builtWord = sentence[i].at(j) + builtWord;  // appends char's to builtWord backwards
+            if (sentence[i].at(j) == ' ') {                 // checks if current char is a space
+                newSentence.push_back(builtWord);           // pushes back (push_back()) previously builtWord to vector
+                builtWord = "";                             // resets value of builtWord to nothing so another word can be built using the same variable
+                wordCount++;                                // increases wordCount because loop has reached a space
+                /* checks if word count is equal to the target wordCount value to flip minus one.
+                 * it is minus one as prep because it means the next "word" needs to be assembled backwards
+                 */
+                if (wordCount == x - 1) {
+                    append = false;                         // sets append to false to trigger the if statement above to append characters backwards
+                    wordCount = -1;                         // sets wordCount to -1 so that proper spacing between flipped words can be achieved
+                }
+                else                                        // if wordCount is not equal to x - 1 then keeps append equal to true for words to be built normally
+                    append = true;
+            }
+        }
+    }
+    newSentence.push_back(builtWord);   // pushes back final builtWord to vector
+    builtWord = "";                     // resets builtWord to nothing so it can be used to built the final sentence
+    for (std :: string x : newSentence) //loop used to assemble final version of sentence
+        builtWord += x + " ";
+    return builtWord;                   // returns final version of sentence.
+}
