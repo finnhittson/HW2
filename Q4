@@ -1,0 +1,44 @@
+/*------------
+ * Question 4
+ -----------*/
+#include <iostream>
+#include "include/hw2q4.h"                          // header file
+
+void moveD(int*, int, int, int);                    // moveD function prototype
+
+int main() {
+    int numbers[4][5] = { { 1, 2, 0, 0, 5 }, { 2, 2, 9, 8, 4 }, { 3, 2, 9, 0, 4 }, { 6, 6, 6, 6, 0 } }; // int numbers array holding block
+    int width = 5;                                      // width of numbers array
+    int height = 4;                                     // height of numbers array
+    int target = 0;                                     // target value for moveD to find
+    std :: cout << "block before: " << std :: endl;     // prints block of numbers before moveD call
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++)
+            std :: cout << numbers[i][j] << " ";
+        std :: cout << std :: endl;
+    }
+    moveD((int*)numbers, width, height, target);        // calls moveD
+    std :: cout << "block after: " << std :: endl;      // prints block of numbers after moveD call
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; j++)
+            std :: cout << numbers[i][j] << " ";
+        std :: cout << std :: endl;
+    }
+    return 0;
+}
+void moveD(int* block, int width, int height, int target) {
+    for (int i = 0; i < width * height; i++) {          // loops through block pointer to numbers array
+        if (block[i] == target) {                       // checks if loop position holds number matching target
+            int orig = i;                               // saves original loop position
+            while (i + width < width * height) {        // loops until lowest position has been found
+                i += width;                             // increases i by the width to simulated a row change
+                if (i + width > width * height) {       // checks if another row change would cause i to go out of range
+                    int temp = block[i];                // using a temp variable to hold value in new i position
+                    block[i] = block[orig];             // reassigns block at position i to hold the value in the original position
+                    block[orig] = temp;                 // reassigns the original position to hold the temp value
+                }
+            }
+            i = orig;                                   // resets the loop counter to its original value
+        }
+    }
+}
