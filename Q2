@@ -1,0 +1,24 @@
+/*------------
+ * Question 2
+ ------------*/
+#include <iostream>
+#include "include/hw2q2.h"                                  // header file
+
+std :: string buildSentence(char [], int, int [], int);     // buildSentence function prototype
+
+int main() {
+    char components[] = "ol,wrd eH";                        // char components array holding jumbled letters
+    int lc = sizeof(components) / sizeof(components[0]);    // calculates size of components array
+    int places[] = {8, 7, 1, 1, 0, 2, 6, 3, 0, 4, 1, 5};    // integer places array holding numbers for character order
+    int lp = sizeof(places) / sizeof(places[0]);            // calculates size of places array
+    std :: cout << buildSentence(components, lc, places, lp);              // calls buildSentence function and prints results
+    return 0;
+}
+std :: string buildSentence(char components[], int lc, int places[], int lp) {
+    std :: string sentence = "";            // sentence variable holding built sentence
+    for (int i = 0; i < lp; i++)            // loop cycles through places array
+        sentence += components[places[i]];  // appends char in components at position whose value is from places based on for loop cycle position
+    return sentence;                        // returns sentence
+}
+
+
