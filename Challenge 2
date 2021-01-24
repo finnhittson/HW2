@@ -1,0 +1,58 @@
+/*-------------
+ * Challenge 2
+ -------------*/
+#include <iostream>
+#include "include/challenge_2.h"                            // header file
+
+void moveDL(int* block, int width, int height, int target); //moveDL function prototype
+
+int main()
+{
+    int width = 5;                                          // width of numbers
+    int height = 4;                                         // height of numbers
+    int numbers[4][5] = { { 1, 2, 0, 0, 5 }, { 2, 2, 9, 8, 4 }, { 3, 2, 9, 0, 4 }, { 6, 6, 6, 6, 0 } }; // 2D array of numbers
+    int target = 0;                                         // target number to search for
+    moveDL((int*)numbers, width, height, target);           // calls moveDL
+    for (int i = 0; i < height; i++) {                      // prints modified numbers array
+        for (int j = 0; j < width; j++) {
+            std :: cout << numbers[i][j] << " ";
+        }
+        std :: cout << std :: endl;
+    }
+    return 0;
+}
+void moveDL(int* block, int width, int height, int target)
+{
+    int rows = 0;                               // variables used to keep track of theoretical rows
+    for (int i = 0; i < width * height; i++) {  // loop through block pointer array
+        if (i%5 == 0)                           // checks if loop has reached a new theoretical row
+            rows++;                             // increases rows counter
+        if (block[i] == target) {               // checks if loop position is same as target
+            bool end = false;                   // ternary used to stop the diagonal shift
+            rows--;                             // decreases the rows count by one to account for proper diagonal shift
+            int left = 0;                       // counter for tallying leftward position shifts
+            int leftStart = i;                  // position on current row in which found target number begins, ranges from 0 to width
+            int down = 0;                       // counter for tallying downward position shifts
+            if (i > width)                      // checks if loop is not on first row so reassigns i to a value between 0 and width
+                leftStart = (i % width);        // mod operator to transform i into number between 0 and width
+            /*
+             * loops incrementing left and down counters until they've reached max possible shifts w/o going out of bounds
+             * first condition: down is +1 to predict the next addition causing it to go out of bounds. rows are subtracted so down will increment at the same rate as left
+             * second condition: left is +1 to predict the next addition causing it to go out of bounds.
+             * third condition: ternary used to stop increments once final position is found. handy for row boundary cases
+             * height is -1 because its value operates on a 1 to 5 basis and not a 0 to 4 basis. -1 brings it to the 0 to 4 basis
+             */
+            while (down + 1 - rows <= height - 1 && left + 1 <= leftStart && !end) {
+                left++;                                                 // increments left and down
+                down++;
+                if (down == height - 1 - rows || left == leftStart) {   // checks if either left or down are at boundary of block
+                    int temp = block[i + width * down - left];          // temp to hold found position's value
+                    block[i + width * down - left] = block[i];          // reassigns found position value to original position's valuse
+                    block[i] = temp;                                    // reassigns original positions value to temp
+                    end = true;
+                }
+            }
+            i = width * height;                                         // ends for loop
+        }
+    }
+}
